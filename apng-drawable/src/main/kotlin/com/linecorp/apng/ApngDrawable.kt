@@ -23,7 +23,6 @@ import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.PixelFormat
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import android.view.animation.AnimationUtils
@@ -119,7 +118,6 @@ class ApngDrawable @VisibleForTesting internal constructor(
      */
     val isRecycled: Boolean = apng.isRecycled
 
-    private val dstRect: Rect = Rect(0, 0, width, height)
     private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
     private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
     private val currentRepeatCount: Int
@@ -160,11 +158,15 @@ class ApngDrawable @VisibleForTesting internal constructor(
             }
         }
 
+    init {
+        bounds.set(0, 0, width, height)
+    }
+
     override fun draw(canvas: Canvas) {
         if (isStarted) {
             progressAnimationElapsedTime()
         }
-        val drawIntervalMillis = apng.drawWithIndex(currentFrameIndex, canvas, null, dstRect, paint)
+        val drawIntervalMillis = apng.drawWithIndex(currentFrameIndex, canvas, null, bounds, paint)
         if (isStarted) {
             scheduleSelf({ invalidateSelf() }, drawIntervalMillis.toLong())
         }
@@ -282,7 +284,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
     private fun computeBitmapSize() {
         scaledWidth = scaleFromDensity(width, sourceDensity, targetDensity)
         scaledHeight = scaleFromDensity(height, sourceDensity, targetDensity)
-        dstRect.set(0, 0, scaledWidth, scaledHeight)
+        bounds.set(0, 0, scaledWidth, scaledHeight)
     }
 
     companion object {
