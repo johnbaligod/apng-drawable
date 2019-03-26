@@ -26,7 +26,6 @@ import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
-import android.view.animation.AnimationUtils
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntRange
 import androidx.annotation.RawRes
@@ -286,39 +285,6 @@ class ApngDrawable @VisibleForTesting internal constructor(
         scaledWidth = scaleFromDensity(apngState.width, apngState.sourceDensity, targetDensity)
         scaledHeight = scaleFromDensity(apngState.height, apngState.sourceDensity, targetDensity)
         dstRect.set(0, 0, scaledWidth, scaledHeight)
-    }
-
-    internal class ApngState(
-        val apng: Apng,
-        /**
-         * The width size of this image in [sourceDensity].
-         */
-        @IntRange(from = 1, to = Int.MAX_VALUE.toLong())
-        val width: Int,
-        /**
-         * The height size of this image in [sourceDensity].
-         */
-        @IntRange(from = 1, to = Int.MAX_VALUE.toLong())
-        val height: Int,
-        /**
-         * The source image density.
-         */
-        val sourceDensity: Int = Bitmap.DENSITY_NONE,
-        val currentTimeProvider: () -> Long = { AnimationUtils.currentAnimationTimeMillis() }
-    ) : ConstantState() {
-
-        constructor(apngState: ApngState) : this(
-            apngState.apng.copy(),
-            apngState.width,
-            apngState.height,
-            apngState.sourceDensity,
-            apngState.currentTimeProvider
-        )
-
-        override fun newDrawable(): Drawable = ApngDrawable(ApngState(this))
-
-        override fun getChangingConfigurations(): Int = 0
-
     }
 
     companion object {

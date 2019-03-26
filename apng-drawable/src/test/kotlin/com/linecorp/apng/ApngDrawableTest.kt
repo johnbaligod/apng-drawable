@@ -55,7 +55,7 @@ class ApngDrawableTest {
         whenever(nBitmapAnimation.loopCount).thenReturn(2)
         currentTimeProvider = CurrentTimeProvider(0L)
         target = ApngDrawable(
-            ApngDrawable.ApngState(
+            ApngState(
                 nBitmapAnimation,
                 200,
                 100
