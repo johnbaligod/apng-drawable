@@ -274,7 +274,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
             } else if (isLastFrame() && isNotLastLoop()) {
                 animationCallbacks.forEach {
                     (it as? WithRepeatAnimationCallback)
-                        ?.onRepeat(this, loopCount, currentRepeatCount)
+                        ?.onRepeat(this, loopCount, currentRepeatCount + 1)
                 }
             }
         }

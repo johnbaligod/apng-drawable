@@ -50,11 +50,11 @@ class MainActivity : AppCompatActivity() {
             Log.d("apng", "Animation start")
             text_callback.text = "Animation started"
         }
-        override fun onRepeat(drawable: ApngDrawable, loopCount: Int, currentLoop: Int) {
+        override fun onRepeat(drawable: ApngDrawable, loopCount: Int, nextLoop: Int) {
             Log.d("apng", "Animation repeat")
             text_callback.text = "Animation repeat " +
                     "loopCount: $loopCount, " +
-                    "currentLoop: $currentLoop"
+                    "nextLoop: $nextLoop"
         }
         override fun onAnimationEnd(drawable: Drawable?) {
             Log.d("apng", "Animation end")
@@ -94,8 +94,8 @@ class MainActivity : AppCompatActivity() {
         if (isApng) {
             drawable = ApngDrawable.decode(assets, name, width, height)
             drawable?.loopCount = 5
-            drawable?.registerAnimationCallback(animationCallback)
             drawable?.setTargetDensity(resources.displayMetrics)
+            drawable?.registerAnimationCallback(animationCallback)
             imageView.setImageDrawable(drawable)
             imageView.scaleType = ImageView.ScaleType.CENTER
         }
