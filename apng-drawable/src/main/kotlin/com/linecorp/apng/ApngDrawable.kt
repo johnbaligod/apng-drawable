@@ -184,9 +184,6 @@ class ApngDrawable @VisibleForTesting internal constructor(
         isStarted = true
         animationPrevDrawTimeMillis = null
         invalidateSelf()
-        animationCallbacks.forEach {
-            it.onAnimationStart(this)
-        }
     }
 
     override fun stop() {
@@ -267,6 +264,18 @@ class ApngDrawable @VisibleForTesting internal constructor(
         }
         animationPrevDrawTimeMillis = currentTimeMillis
 
+        if (isStarted) {
+            if (isFirstFrame() && isFirstLoop()) {
+                animationCallbacks.forEach {
+                    it.onAnimationStart(this)
+                }
+            } else if (isLastFrame() && isNotLastLoop()) {
+                animationCallbacks.forEach {
+                    (it as? WithRepeatAnimationCallback)
+                        ?.onRepeat(this, loopCount, currentRepeatCount)
+                }
+            }
+        }
         if (exceedsRepeatCountLimitation()) {
             isStarted = false
             animationCallbacks.forEach {
@@ -274,6 +283,14 @@ class ApngDrawable @VisibleForTesting internal constructor(
             }
         }
     }
+
+    private fun isFirstFrame(): Boolean = currentFrameIndex == 0
+
+    private fun isLastFrame(): Boolean = currentFrameIndex == frameCount - 1
+
+    private fun isFirstLoop(): Boolean = currentRepeatCount == 1
+
+    private fun isNotLastLoop(): Boolean = currentRepeatCount < loopCount
 
     private fun exceedsRepeatCountLimitation(): Boolean {
         if (loopCount == 0) {
