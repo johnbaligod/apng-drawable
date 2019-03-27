@@ -23,6 +23,7 @@ object Versions {
     const val robolectricVersion = "4.0.2"
     const val mockitoVersion = "2.25.1"
     const val mockitoKotlinVersion = "2.1.0"
+    const val apngDrawableVersion = Consts.version
 }
 
 object Libs {
@@ -50,4 +51,6 @@ object Libs {
     val mockitoInline = "org.mockito:mockito-inline:${Versions.mockitoVersion}"
     val mockitoKotlin =
         "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockitoKotlinVersion}"
+    val apngdrawable =
+        "com.linecorp:apng:${Versions.apngDrawableVersion}"
 }

@@ -1,5 +1,5 @@
 object Consts {
-    const val version = "1.3.0"
+    const val version = "1.3.0.2-SNAPSHOT"
     const val groupId = "com.linecorp"
     const val artifactId = "apng"
     const val bintrayRepo = "apng-drawable"
@@ -8,4 +8,5 @@ object Consts {
     const val siteUrl = "https://github.com/line/apng-drawable"
     const val issueTrackerUrl = "https://github.com/line/apng-drawable/issues"
     const val vcsUrl = "https://github.com/line/apng-drawable.git"
+    const val snapshotRepositoryUrl = "http://repo.linecorp.com/content/repositories/nightly/"
 }

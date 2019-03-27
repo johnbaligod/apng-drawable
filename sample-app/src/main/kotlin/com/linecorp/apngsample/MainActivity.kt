@@ -94,8 +94,8 @@ class MainActivity : AppCompatActivity() {
         if (isApng) {
             drawable = ApngDrawable.decode(assets, name, width, height)
             drawable?.loopCount = 5
-            drawable?.setTargetDensity(resources.displayMetrics)
             drawable?.registerAnimationCallback(animationCallback)
+            drawable?.setTargetDensity(resources.displayMetrics)
             imageView.setImageDrawable(drawable)
             imageView.scaleType = ImageView.ScaleType.CENTER
         }
