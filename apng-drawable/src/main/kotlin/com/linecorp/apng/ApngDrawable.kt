@@ -257,6 +257,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
     fun recycle() = apngState.apng.recycle()
 
     private fun progressAnimationElapsedTime() {
+        val lastFrame = currentFrameIndex
         val currentTimeMillis = apngState.currentTimeProvider.invoke()
         val animationPrevDrawTimeMillisSnapShot = animationPrevDrawTimeMillis
         animationElapsedTimeMillis = if (animationPrevDrawTimeMillisSnapShot == null) {
@@ -265,13 +266,22 @@ class ApngDrawable @VisibleForTesting internal constructor(
             animationElapsedTimeMillis + currentTimeMillis - animationPrevDrawTimeMillisSnapShot
         }
         animationPrevDrawTimeMillis = currentTimeMillis
+        val frameChanged = currentFrameIndex != lastFrame
 
         if (isStarted) {
-            if (isFirstFrame() && isFirstLoop()) {
+            if (
+                isFirstFrame() &&
+                isFirstLoop() &&
+                animationPrevDrawTimeMillisSnapShot == null
+            ) {
                 animationCallbacks.forEach {
                     it.onAnimationStart(this)
                 }
-            } else if (isLastFrame() && isNotLastLoop()) {
+            } else if (
+                isLastFrame() &&
+                isNotLastLoop() &&
+                frameChanged
+            ) {
                 animationCallbacks.forEach {
                     (it as? WithRepeatAnimationCallback)
                         ?.onRepeat(this, loopCount, currentRepeatCount + 1)

@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             text_callback.text = "Animation started"
         }
         override fun onRepeat(drawable: ApngDrawable, loopCount: Int, nextLoop: Int) {
-            Log.d("apng", "Animation repeat")
+            Log.d("apng", "Animation repeat loopCount: $loopCount, nextLoop: $nextLoop")
             text_callback.text = "Animation repeat " +
                     "loopCount: $loopCount, " +
                     "nextLoop: $nextLoop"
