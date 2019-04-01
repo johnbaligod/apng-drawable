@@ -108,6 +108,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
     private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
+    private val repeatAnimationCallbacks: MutableList<RepeatAnimationCallback> = arrayListOf()
     private val currentRepeatCount: Int
         get() = (animationElapsedTimeMillis / durationMillis).toInt() + 1
     /**
@@ -213,6 +214,14 @@ class ApngDrawable @VisibleForTesting internal constructor(
         callback: Animatable2Compat.AnimationCallback
     ): Boolean = animationCallbacks.remove(callback)
 
+    fun registerRepeatAnimationCallback(repeatCallback: RepeatAnimationCallback) {
+        repeatAnimationCallbacks.add(repeatCallback)
+    }
+
+    fun unregisterRepeatAnimationCallback(
+        repeatCallback: RepeatAnimationCallback
+    ): Boolean = repeatAnimationCallbacks.remove(repeatCallback)
+
     override fun clearAnimationCallbacks() = animationCallbacks.clear()
 
     override fun getConstantState(): ConstantState? {
@@ -282,9 +291,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
                 isNotLastLoop() &&
                 frameChanged
             ) {
-                animationCallbacks.forEach {
-                    (it as? WithRepeatAnimationCallback)
-                        ?.onRepeat(this, loopCount, currentRepeatCount + 1)
+                repeatAnimationCallbacks.forEach {
+                    it.onRepeat(this, loopCount, currentRepeatCount + 1)
                 }
             }
         }

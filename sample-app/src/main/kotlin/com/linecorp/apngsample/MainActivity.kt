@@ -22,8 +22,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.linecorp.apng.ApngDrawable
-import com.linecorp.apng.WithRepeatAnimationCallback
+import com.linecorp.apng.RepeatAnimationCallback
 import kotlinx.android.synthetic.main.activity_main.button_copy
 import kotlinx.android.synthetic.main.activity_main.button_gc
 import kotlinx.android.synthetic.main.activity_main.button_load_image_1
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     private var drawable: ApngDrawable? = null
 
     @SuppressLint("SetTextI18n")
-    private val animationCallback = object : WithRepeatAnimationCallback() {
+    private val animationCallback = object : AnimationCallbacks() {
         override fun onAnimationStart(drawable: Drawable?) {
             Log.d("apng", "Animation start")
             text_callback.text = "Animation started"
@@ -96,6 +97,7 @@ class MainActivity : AppCompatActivity() {
             drawable?.loopCount = 5
             drawable?.setTargetDensity(resources.displayMetrics)
             drawable?.registerAnimationCallback(animationCallback)
+            drawable?.registerRepeatAnimationCallback(animationCallback)
             imageView.setImageDrawable(drawable)
             imageView.scaleType = ImageView.ScaleType.CENTER
         }
@@ -110,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         drawable = drawable?.constantState?.newDrawable() as? ApngDrawable ?: return
         drawable?.loopCount = 5
         drawable?.registerAnimationCallback(animationCallback)
+        drawable?.registerRepeatAnimationCallback(animationCallback)
         drawable?.setTargetDensity(resources.displayMetrics)
 
         (imageView.drawable as? ApngDrawable)?.recycle()
@@ -131,4 +134,7 @@ class MainActivity : AppCompatActivity() {
     private fun seekTo(time: Long) {
         drawable?.seekTo(time)
     }
+
+    private abstract class AnimationCallbacks
+        : Animatable2Compat.AnimationCallback(), RepeatAnimationCallback
 }
