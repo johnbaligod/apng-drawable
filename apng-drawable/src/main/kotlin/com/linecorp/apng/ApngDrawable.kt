@@ -288,11 +288,11 @@ class ApngDrawable @VisibleForTesting internal constructor(
                 }
             } else if (
                 isLastFrame() &&
-                isNotLastLoop() &&
+                hasNextLoop() &&
                 frameChanged
             ) {
                 repeatAnimationCallbacks.forEach {
-                    it.onRepeat(this, loopCount, currentRepeatCount + 1)
+                    it.onRepeat(this, currentRepeatCount + 1)
                 }
             }
         }
@@ -310,7 +310,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     private fun isFirstLoop(): Boolean = currentRepeatCount == 1
 
-    private fun isNotLastLoop(): Boolean = currentRepeatCount < loopCount
+    private fun hasNextLoop(): Boolean = currentRepeatCount < loopCount
 
     private fun exceedsRepeatCountLimitation(): Boolean {
         if (loopCount == 0) {
